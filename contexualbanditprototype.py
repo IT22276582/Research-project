@@ -7,7 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1bqfZNcie-JB6Dz95u_Myzy7V2rhx5eFy
 """
 
-!pip install mabwiser pandas numpy matplotlib seaborn
 
 import pandas as pd
 import numpy as np
