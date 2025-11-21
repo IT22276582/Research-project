@@ -1,0 +1,205 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+  container-type: inline-size;
+  width: 100%;
+  max-width: var(--card-max-width);
+}
+
+.placeholder {
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  padding: var(--component-padding-lg);
+  text-align: center;
+  border: 1px dashed var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-surface);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap-md);
+}
+
+.promptLabel {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.promptReason {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  text-transform: capitalize;
+  line-height: var(--leading-tight);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.label {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.labelHint {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.range {
+  width: 100%;
+  height: var(--component-height-sm);
+  accent-color: var(--color-info);
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.helperText {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+.textarea {
+  width: 100%;
+  min-height: var(--component-height-lg);
+  max-height: var(--panel-max-height);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: var(--component-padding-md);
+  resize: vertical;
+  font-family: inherit;
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-info);
+  box-shadow: var(--focus-ring);
+}
+
+.error {
+  color: var(--color-error);
+  font-size: var(--text-sm);
+  padding: var(--component-padding-sm);
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  border-radius: 0.5rem;
+}
+
+.info {
+  color: var(--color-success);
+  font-size: var(--text-sm);
+  padding: var(--component-padding-sm);
+  background: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
+  border-radius: 0.5rem;
+}
+
+.actions {
+  margin-top: var(--space-sm);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+}
+
+.button {
+  border: none;
+  border-radius: 0.65rem;
+  padding: var(--component-padding-sm) var(--component-padding-md);
+  font-size: var(--text-base);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+  min-height: var(--touch-target-min);
+  touch-action: manipulation;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.button:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.primary {
+  background: linear-gradient(120deg, #10b981, #0ea5e9);
+  color: #0b1220;
+}
+
+.warn {
+  background: linear-gradient(120deg, #f59e0b, #f97316);
+  color: #0f172a;
+}
+
+.infoButton {
+  background: linear-gradient(120deg, #38bdf8, #0ea5e9);
+  color: #0b1220;
+}
+
+.muted {
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.muted:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-hover);
+}
+
+/* Container queries for responsive panel behavior */
+@container (max-width: 400px) {
+  .panel {
+    gap: var(--gap-sm);
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--gap-sm);
+  }
+  
+  .promptReason {
+    font-size: var(--text-base);
+  }
+  
+  .actions {
+    flex-direction: column;
+    gap: var(--gap-sm);
+  }
+  
+  .button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@container (min-width: 600px) {
+  .actions {
+    justify-content: flex-start;
+  }
+}

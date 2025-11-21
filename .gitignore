@@ -1,0 +1,47 @@
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE settings
+.idea/
+.vscode/
+*.code-workspace
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# database files
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+
+# Rust/Cargo
+target/
+cognitive_load_estimator/target/
+
+# Node.js
+node_modules/
+cognitive_load_estimator/node_modules/
+.next/
+.turbo/
+out/
+
+# Logs and caches
+*.log
+.cache/
+
+# Local env/config
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# Runtime artifacts
+data/

@@ -1,0 +1,6 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "include": ["cog_py_est"],
+  "reportMissingImports": "warning"
+}

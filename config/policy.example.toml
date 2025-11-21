@@ -1,0 +1,81 @@
+# Lightweight defaults aligned with the documented CLE diagrams.
+[window]
+window_seconds = 60
+hop_seconds = 15
+inactivity_gap_seconds = 5
+
+[estimator]
+process_noise = 0.01
+measurement_noise = 0.05
+initial_variance = 1.0
+rls_forgetting_factor = 0.98
+baseline_minutes = 5
+diffuse_mean = 0.0
+diffuse_variance = 4.0
+
+[permissions]
+allowed_sources = ["keyboard", "pointer", "system"]
+privacy_pause = false
+context_blocklist = []
+idle_block_seconds = 900
+consent_log_path = "data/consent_log.jsonl"
+
+[ema]
+min_seconds_between_prompts = 1800
+cooldown_on_dismiss_seconds = 900
+trigger_uncertainty_threshold = 0.25
+trigger_residual_threshold = 0.2
+
+[sensitivity]
+current_profile = "balanced"
+
+[sensitivity.profiles.conservative]
+residual_threshold = 0.20
+uncertainty_threshold = 0.25
+process_noise = 0.015
+measurement_noise = 0.15
+description = "High thresholds for maximum stability, minimal prompting"
+
+[sensitivity.profiles.balanced]
+residual_threshold = 0.15
+uncertainty_threshold = 0.18
+process_noise = 0.01
+measurement_noise = 0.2
+description = "Moderate thresholds for balanced prompting frequency"
+
+[sensitivity.profiles.responsive]
+residual_threshold = 0.10
+uncertainty_threshold = 0.12
+process_noise = 0.005
+measurement_noise = 0.3
+description = "Low thresholds for maximum responsiveness"
+
+[sensitivity.profiles.sensitive]
+residual_threshold = 0.11
+uncertainty_threshold = 0.135
+process_noise = 0.006
+measurement_noise = 0.26
+description = "More alerts than responsive without being extreme"
+
+[sensitivity.profiles.very_sensitive]
+residual_threshold = 0.09
+uncertainty_threshold = 0.11
+process_noise = 0.004
+measurement_noise = 0.32
+description = "Aggressive prompting for elevated workloads"
+
+[sensitivity.profiles.v_very_sensitive]
+residual_threshold = 0.07
+uncertainty_threshold = 0.09
+process_noise = 0.003
+measurement_noise = 0.35
+description = "Maximum reactivity (lab validation only)"
+
+[storage]
+path = "data/state.db"
+enable_retention_prune = true
+retention_hours = 48
+
+[service]
+host = "127.0.0.1"
+port = 8000
