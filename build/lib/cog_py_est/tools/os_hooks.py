@@ -56,8 +56,10 @@ def run_hooks(endpoint: str) -> None:
     last_key_time = time.perf_counter()
     last_mouse_time = time.perf_counter()
 
-    def on_press(key: keyboard.Key | keyboard.KeyCode) -> None:
+    def on_press(key: keyboard.Key | keyboard.KeyCode | None) -> None:
         nonlocal last_key_time
+        if key is None:
+            return
         now_perf = time.perf_counter()
         dt = (now_perf - last_key_time) * 1000.0
         last_key_time = now_perf
@@ -122,7 +124,7 @@ def _classify_context_label(focus: str) -> str:
 
 
 async def _context_poller(queue: asyncio.Queue[PendingEvent], interval: float = 1.5) -> None:
-    last_payload: Dict[str, float] | None = None
+    last_payload: Dict[str, float | str | bool] | None = None
     while True:
         payload = _collect_context_payload()
         if payload and payload != last_payload:
