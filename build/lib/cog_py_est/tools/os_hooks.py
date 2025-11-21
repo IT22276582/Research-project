@@ -9,7 +9,7 @@ import ctypes
 import platform
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import httpx
 from pynput import keyboard, mouse

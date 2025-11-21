@@ -6,7 +6,7 @@ import json
 from hashlib import sha256
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, cast
+from typing import Any, Dict, List, Optional, Tuple
 
 import aiosqlite
 import numpy as np
