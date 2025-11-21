@@ -11,7 +11,7 @@ import numpy as np
 
 from .events import Event
 
-FEATURE_VECTOR_DIM = 13
+FEATURE_VECTOR_DIM = 10
 
 @dataclass
 class FeatureWindow:
@@ -158,7 +158,7 @@ def fuse_features(
     system_events = [e for e in events if e.source == "system"]
     key_vec, key_stats = _keystroke_features(keyboard_events)
     pointer_vec, pointer_stats = _pointer_features(pointer_events)
-    context_vec, context_stats = _context_features(system_events)
+    _, context_stats = _context_features(system_events)
     idle = _idle_fraction(events, window_start, window_end)
 
     imputed_keyboard = False
@@ -181,10 +181,7 @@ def fuse_features(
     vector = np.array(
         key_vec
         + pointer_vec
-        + [
-            idle,
-        ]
-        + context_vec,
+        + [idle],
         dtype=float,
     )
     coverage = 1.0 - idle
