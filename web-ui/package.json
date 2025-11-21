@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "next": "14.2.4",
@@ -15,12 +17,16 @@
     "swr": "2.3.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
     "@types/node": "22.5.4",
     "@types/react": "18.3.11",
     "@types/react-dom": "18.3.0",
     "autoprefixer": "^10.4.22",
+    "jsdom": "^27.2.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.13",
-    "typescript": "5.5.4"
+    "typescript": "5.5.4",
+    "vitest": "^4.0.12"
   }
 }

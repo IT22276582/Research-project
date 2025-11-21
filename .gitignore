@@ -32,6 +32,7 @@ cognitive_load_estimator/node_modules/
 .next/
 .turbo/
 out/
+*.tsbuildinfo
 
 # Logs and caches
 *.log

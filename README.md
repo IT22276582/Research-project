@@ -73,6 +73,15 @@ Lightweight, on-device microservice that follows the documented CLE architecture
   ```
 - The script checks/installs UI deps, starts the Python service, Next dev server, and optionally the OS hook streamer.
 
+## Testing & quality
+- Python test deps: `python -m pip install ".[tests,lint]"` before running checks.
+- Backend lint: `ruff check .`
+- Backend unit/integration/benchmark suite: `python -m unittest discover -s tests -p "test_*.py"` (covers FastAPI ingest, feature vector shape/performance, and Kalman throughput)
+- Frontend tests: `cd web-ui && npm test`
+- Frontend type-check: `cd web-ui && npm run typecheck`
+- Frontend build: `cd web-ui && npm run build`
+- CI: GitHub Actions runs lint + backend tests/benchmarks + frontend tests/type-check + build on pushes/PRs.
+
 ### Hooking real OS events into `/events`
 - Install optional hook deps: `python -m pip install ".[hooks]"`.
 - Run the helper that streams keyboard/pointer timing (no content) into the service:

@@ -5,8 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
-from pathlib import Path
+from datetime import datetime, timedelta
 import logging
 from typing import Any, Dict, List, Optional
 
@@ -18,7 +17,7 @@ from .context import ContextMonitor
 from .ema import EmaScheduler
 from .ema_integrator import EMAIntegrator
 from .events import Event, EventBuffer, PermissionGuard, utc_now
-from .features import FEATURE_VECTOR_DIM, fuse_features
+from .features import FEATURE_VECTOR_DIM
 from .kalman import Estimate, KalmanEstimator
 from .normalization import RollingNormalizer
 from .policy import ConsentLog, PolicyActor
