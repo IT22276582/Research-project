@@ -62,8 +62,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ data, fromDate, toDate }) => {
 
   // Function to safely format the value
   const formatValue = (value: number | null): string => {
-    if (value === null) return '';
-    if (typeof value !== 'number') return '';
+    if (value === null || typeof value !== 'number' || isNaN(value)) return '';
     return value > 0 ? value.toFixed(1) : '';
   };
 
