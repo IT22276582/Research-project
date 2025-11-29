@@ -3,7 +3,7 @@ import numpy as np
 from mabwiser.mab import MAB, LearningPolicy
 
 # Load dataset
-df2 = pd.read_csv(r"D:\Research-project\yuvidu\backend\large_contextual_bandit_dataset.csv")
+df2 = pd.read_csv(r"D:\Research-project\yuvidu\backend\large_contextual_bandit_dataset2.csv")
 
 # Features used for context
 context_features = [
@@ -40,10 +40,9 @@ best_arm = mab.predict(avg_context)
 
 def predict_context():
     """Returns the best predicted time of day as a string."""
-    return inverse_mapping[int(best_arm)]
-
-
-import numpy as np
+    result = inverse_mapping[int(best_arm)]
+    print("Predicted time of day:", result)  # This will now print
+    return result
 
 def predict_all_percentages():
     """
@@ -51,14 +50,30 @@ def predict_all_percentages():
     """
     context = avg_context  # using your average context
     scores = {}
+    
+    # Get predictions for all arms
+    expectations = mab.predict_expectations(context)
     for arm in mab.arms:
-        # LinUCB gives score = theta^T x + alpha * sqrt(x^T A^-1 x)
-        theta = mab.learning_policy.theta[arm]
-        A_inv = mab.learning_policy.A_inv[arm]
-        p = theta.dot(context.T) + mab.learning_policy.alpha * np.sqrt(context.dot(A_inv).dot(context.T))
-        scores[arm] = float(p)
-
+        # Get the score for this arm
+        scores[arm] = float(expectations[arm])
+    
+    # Calculate percentages
     total = sum(scores.values())
-    percentages = {inverse_mapping[a]: (scores[a] / total) * 100 for a in scores}
+    if total > 0:
+        percentages = {inverse_mapping[a]: (scores[a] / total) * 100 for a in scores}
+    else:
+        # If all scores are zero, distribute equally
+        percentages = {inverse_mapping[a]: 100.0 / len(scores) for a in scores}
+    
     best_arm = max(scores, key=scores.get)
     return inverse_mapping[best_arm], percentages
+
+
+# Add this at the end of the file
+if __name__ == "__main__":
+    print("Testing prediction:")
+    best_time, percentages = predict_all_percentages()
+    print(f"Best time: {best_time}")
+    print("Percentages:")
+    for time, percentage in percentages.items():
+        print(f"  {time.capitalize()}: {percentage:.2f}%")

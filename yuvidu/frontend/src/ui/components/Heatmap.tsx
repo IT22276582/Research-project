@@ -1,183 +1,153 @@
-import React from 'react';
-import { startOfWeek, addDays, isSameDay } from 'date-fns';
-import { scaleLinear } from 'd3-scale';
+import React from "react";
+import { scaleLinear } from "d3-scale";
+import "./Heatmap.css";
 
 interface HeatmapProps {
-  data: { date: Date; value: number }[];
-  fromDate: Date;
-  toDate: Date;
+  percentages: {
+    morning: number;
+    afternoon: number;
+    evening: number;
+  };
 }
 
-interface WeekData {
-  name: string;
-  days: (number | null)[];
-  dates: Date[];
-}
+const Heatmap: React.FC<HeatmapProps> = ({ percentages }) => {
+  // Create hourly data for better heatmap visualization
+  const hours = [
+    "6AM", "7AM", "8AM", "9AM", "10AM", "11AM",
+    "12PM", "1PM", "2PM", "3PM", "4PM", "5PM",
+    "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"
+  ];
 
-const Heatmap: React.FC<HeatmapProps> = ({ data, fromDate, toDate }) => {
-  // Generate all days in the date range
-  const daysInRange: Date[] = [];
-  let currentDate = new Date(fromDate);
-  
-  while (currentDate <= toDate) {
-    daysInRange.push(new Date(currentDate));
-    currentDate = addDays(currentDate, 1);
-  }
-
-  // Group data by week
-  const weeks: { [key: string]: { date: Date; value: number | null }[] } = {};
-  
-  daysInRange.forEach((day) => {
-    const weekStart = startOfWeek(day, { weekStartsOn: 0 });
-    const weekKey = weekStart.toISOString();
-    
-    if (!weeks[weekKey]) {
-      weeks[weekKey] = Array(7).fill(null).map((_, i) => ({
-        date: addDays(weekStart, i),
-        value: null,
-      }));
+  // Map percentages to hourly values (distribute across time periods)
+  const hourlyData = hours.map((hour, index) => {
+    let value;
+    if (index < 6) { // Morning (6AM-11AM)
+      value = percentages.morning;
+    } else if (index < 12) { // Afternoon (12PM-5PM)
+      value = percentages.afternoon;
+    } else { // Evening (6PM-11PM)
+      value = percentages.evening;
     }
-    
-    const dayData = data.find(d => isSameDay(d.date, day));
-    const dayIndex = weeks[weekKey].findIndex(d => isSameDay(d.date, day));
-    
-    if (dayIndex !== -1 && dayData) {
-      weeks[weekKey][dayIndex].value = dayData.value;
-    }
+    return { hour, value };
   });
 
-  // Prepare data for the heatmap
-  const heatmapData: WeekData[] = Object.entries(weeks).map(([_, weekDays], weekIndex) => ({
-    name: `Week ${weekIndex + 1}`,
-    days: weekDays.map(day => day.value),
-    dates: weekDays.map(day => day.date)
-  }));
-
-  // Color scale for the heatmap
+  // Better heatmap color scale - more distinct colors for intensity
   const colorScale = scaleLinear<string>()
-    .domain([0, 0.5, 1])
-    .range(['#e0f7fa', '#00bcd4', '#006064']);
-
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-  // Function to safely format the value
-  const formatValue = (value: number | null): string => {
-    if (value === null || typeof value !== 'number' || isNaN(value)) return '';
-    return value > 0 ? value.toFixed(1) : '';
-  };
+    .domain([0, 20, 40, 60, 80, 100])
+    .range([
+      "#dc2626", // Dark red for very low
+      "#f87171", // Light red for low  
+      "#fbbf24", // Amber for medium-low
+      "#facc15", // Yellow for medium
+      "#84cc16", // Lime for medium-high
+      "#16a34a"  // Green for high
+    ]);
 
   return (
-    <div style={{ 
-      width: '100%', 
-      marginTop: '2rem',
-      minHeight: '300px' // Ensure minimum height
-    }}>
-      <h3>Weekly Productivity Heatmap</h3>
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        gap: '8px',
-        backgroundColor: '#f9f9f9',
-        padding: '1rem',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-      }}>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          gap: '4px', 
-          marginBottom: '8px' 
-        }}>
-          {days.map((day, i) => (
-            <div 
-              key={i} 
-              style={{ 
-                width: '24px', 
-                textAlign: 'center', 
-                fontSize: '12px',
-                fontWeight: 'bold'
-              }}
-            >
-              {day[0]}
-            </div>
+    <div className="heatmap-container">
+      <h3 className="heatmap-title">
+        🌡️ Prediction Intensity Heatmap
+      </h3>
+
+      {/* Traditional heatmap grid */}
+      <div className="heatmap-grid-section">
+        {/* Time period labels */}
+        <div className="heatmap-period-labels">
+          <div></div>
+          <div className="heatmap-period-label" style={{ gridColumn: "2/8" }}>Morning</div>
+          <div className="heatmap-period-label" style={{ gridColumn: "8/14" }}>Afternoon</div>
+          <div className="heatmap-period-label" style={{ gridColumn: "14/20" }}>Evening</div>
+        </div>
+
+        {/* Hour labels */}
+        <div className="heatmap-hour-labels">
+          <div>Time</div>
+          {hours.map(hour => (
+            <div key={hour} className="heatmap-hour-label">{hour}</div>
           ))}
         </div>
-        
-        {heatmapData.map((week, weekIndex) => (
-          <div 
-            key={weekIndex} 
-            style={{ 
-              display: 'flex', 
-              justifyContent: 'center', 
-              gap: '4px' 
-            }}
-          >
-            {week.days.map((value, dayIndex) => {
-              const color = value !== null ? colorScale(value) : '#f0f0f0';
-              
+
+        {/* Heatmap cells */}
+        <div className="heatmap-cells">
+          <div className="heatmap-intensity-label">Intensity</div>
+          {hourlyData.map((data, index) => {
+            const color = colorScale(data.value);
+            // Better text contrast based on background color
+            const textColor = data.value >= 60 ? "heatmap-text-light" : data.value >= 40 ? "heatmap-text-medium" : "heatmap-text-dark";
+            
+            return (
+              <div
+                key={index}
+                className="heatmap-cell"
+                style={{ background: color }}
+                title={`${data.hour}: ${data.value.toFixed(1)}% intensity`}
+              >
+                <div className="heatmap-cell-content">
+                  <div className="heatmap-cell-hour">
+                    {data.hour}
+                  </div>
+                  <div className={`heatmap-cell-percentage ${textColor}`}>
+                    {data.value.toFixed(0)}%
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Summary statistics */}
+      <div className="heatmap-summary">
+        <div className="heatmap-summary-card heatmap-summary-morning">
+          <div className="heatmap-summary-label">Morning</div>
+          <div className="heatmap-summary-value">
+            {percentages.morning.toFixed(1)}%
+          </div>
+        </div>
+        <div className="heatmap-summary-card heatmap-summary-afternoon">
+          <div className="heatmap-summary-label">Afternoon</div>
+          <div className="heatmap-summary-value">
+            {percentages.afternoon.toFixed(1)}%
+          </div>
+        </div>
+        <div className="heatmap-summary-card heatmap-summary-evening">
+          <div className="heatmap-summary-label">Evening</div>
+          <div className="heatmap-summary-value">
+            {percentages.evening.toFixed(1)}%
+          </div>
+        </div>
+      </div>
+
+      {/* Color scale legend */}
+      <div className="heatmap-legend">
+        <div className="heatmap-legend-title">
+          Intensity Scale (Low → High)
+        </div>
+        <div className="heatmap-legend-container">
+          <span className="heatmap-legend-label">0%</span>
+          <div className="heatmap-legend-bar">
+            {[0, 20, 40, 60, 80, 100].map((val, idx) => {
+              const textColor = val >= 60 ? "heatmap-legend-segment-light-text" : "heatmap-legend-segment-dark-text";
               return (
                 <div
-                  key={dayIndex}
-                  style={{
-                    width: '24px',
-                    height: '24px',
-                    backgroundColor: color,
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    position: 'relative',
-                    border: '1px solid #e0e0e0'
-                  }}
-                  title={
-                    value !== null 
-                      ? `Value: ${value}\nDate: ${week.dates[dayIndex].toLocaleDateString()}` 
-                      : 'No data'
-                  }
+                  key={idx}
+                  className={`heatmap-legend-segment ${textColor}`}
+                  style={{ background: colorScale(val) }}
                 >
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: value !== null ? (value > 0.5 ? 'white' : 'rgba(0, 0, 0, 0.87)') : 'transparent',
-                      fontSize: '10px',
-                      fontWeight: 'bold'
-                    }}
-                  >
-                    {formatValue(value)}
-                  </div>
+                  {val}%
                 </div>
               );
             })}
           </div>
-        ))}
-      </div>
-      
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        marginTop: '16px',
-        alignItems: 'center',
-        gap: '8px'
-      }}>
-        <span style={{ fontSize: '12px', color: '#666' }}>Less Productive</span>
-        {[0, 0.25, 0.5, 0.75, 1].map((value) => (
-          <div
-            key={value}
-            style={{
-              width: '20px',
-              height: '20px',
-              backgroundColor: colorScale(value),
-              borderRadius: '4px',
-              border: '1px solid #e0e0e0'
-            }}
-          />
-        ))}
-        <span style={{ fontSize: '12px', color: '#666' }}>More Productive</span>
+          <span className="heatmap-legend-label">100%</span>
+        </div>
+        <div className="heatmap-legend-scale">
+          <span className="heatmap-legend-scale-label">Very Low</span>
+          <span className="heatmap-legend-scale-label">Low</span>
+          <span className="heatmap-legend-scale-label">Medium</span>
+          <span className="heatmap-legend-scale-label">High</span>
+          <span className="heatmap-legend-scale-label">Very High</span>
+        </div>
       </div>
     </div>
   );
