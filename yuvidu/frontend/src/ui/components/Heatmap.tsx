@@ -7,6 +7,7 @@ interface HeatmapProps {
     morning: number;
     afternoon: number;
     evening: number;
+    night: number;
   };
 }
 
@@ -15,18 +16,21 @@ const Heatmap: React.FC<HeatmapProps> = ({ percentages }) => {
   const hours = [
     "6AM", "7AM", "8AM", "9AM", "10AM", "11AM",
     "12PM", "1PM", "2PM", "3PM", "4PM", "5PM",
-    "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"
+    "6PM", "7PM", "8PM", "9PM", "10PM", "11PM",
+    "12AM", "1AM", "2AM", "3AM", "4AM", "5AM"
   ];
 
   // Map percentages to hourly values (distribute across time periods)
   const hourlyData = hours.map((hour, index) => {
     let value;
     if (index < 6) { // Morning (6AM-11AM)
-      value = percentages.morning;
+      value = percentages?.morning ?? 0;
     } else if (index < 12) { // Afternoon (12PM-5PM)
-      value = percentages.afternoon;
-    } else { // Evening (6PM-11PM)
-      value = percentages.evening;
+      value = percentages?.afternoon ?? 0;
+    } else if (index < 18) { // Evening (6PM-11PM)
+      value = percentages?.evening ?? 0;
+    } else { // Night (12AM-5AM)
+      value = percentages?.night ?? 0;
     }
     return { hour, value };
   });
@@ -57,6 +61,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ percentages }) => {
           <div className="heatmap-period-label" style={{ gridColumn: "2/8" }}>Morning</div>
           <div className="heatmap-period-label" style={{ gridColumn: "8/14" }}>Afternoon</div>
           <div className="heatmap-period-label" style={{ gridColumn: "14/20" }}>Evening</div>
+          <div className="heatmap-period-label" style={{ gridColumn: "20/26" }}>Night</div>
         </div>
 
         {/* Hour labels */}
@@ -101,19 +106,25 @@ const Heatmap: React.FC<HeatmapProps> = ({ percentages }) => {
         <div className="heatmap-summary-card heatmap-summary-morning">
           <div className="heatmap-summary-label">Morning</div>
           <div className="heatmap-summary-value">
-            {percentages.morning.toFixed(1)}%
+            {(percentages?.morning ?? 0).toFixed(1)}%
           </div>
         </div>
         <div className="heatmap-summary-card heatmap-summary-afternoon">
           <div className="heatmap-summary-label">Afternoon</div>
           <div className="heatmap-summary-value">
-            {percentages.afternoon.toFixed(1)}%
+            {(percentages?.afternoon ?? 0).toFixed(1)}%
           </div>
         </div>
         <div className="heatmap-summary-card heatmap-summary-evening">
           <div className="heatmap-summary-label">Evening</div>
           <div className="heatmap-summary-value">
-            {percentages.evening.toFixed(1)}%
+            {(percentages?.evening ?? 0).toFixed(1)}%
+          </div>
+        </div>
+        <div className="heatmap-summary-card heatmap-summary-evening">
+          <div className="heatmap-summary-label">Night</div>
+          <div className="heatmap-summary-value">
+            {(percentages?.night ?? 0).toFixed(1)}%
           </div>
         </div>
       </div>

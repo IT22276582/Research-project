@@ -8,6 +8,7 @@ interface PredictionData {
     morning: number;
     afternoon: number;
     evening: number;
+    night: number;
   };
   status: string;
 }

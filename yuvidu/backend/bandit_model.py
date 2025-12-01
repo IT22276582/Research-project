@@ -17,7 +17,7 @@ context_features = [
 ]
 
 # Action mapping
-arm_mapping = {'morning': 0, 'afternoon': 1, 'evening': 2}
+arm_mapping = {'morning': 0, 'afternoon': 1, 'evening': 2, 'night': 3}
 inverse_mapping = {v: k for k, v in arm_mapping.items()}
 
 # Extract data
@@ -27,7 +27,7 @@ context_df = df2[context_features].astype(float)
 
 # Train model
 mab = MAB(
-    arms=[0, 1, 2],
+    arms=[0, 1, 2, 3],
     learning_policy=LearningPolicy.LinUCB(alpha=1.25)
 )
 

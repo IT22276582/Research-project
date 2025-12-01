@@ -20,7 +20,7 @@
 
 .heatmap-period-labels {
   display: grid;
-  grid-template-columns: 60px repeat(6, 1fr) repeat(6, 1fr) repeat(6, 1fr);
+  grid-template-columns: 60px repeat(6, 1fr) repeat(6, 1fr) repeat(6, 1fr) repeat(6, 1fr);
   gap: 2px;
   margin-bottom: 4px;
   font-size: 0.75rem;
@@ -34,7 +34,7 @@
 
 .heatmap-hour-labels {
   display: grid;
-  grid-template-columns: 60px repeat(18, 1fr);
+  grid-template-columns: 60px repeat(24, 1fr);
   gap: 2px;
   margin-bottom: 4px;
   font-size: 0.65rem;
@@ -47,7 +47,7 @@
 
 .heatmap-cells {
   display: grid;
-  grid-template-columns: 60px repeat(18, 1fr);
+  grid-template-columns: 60px repeat(24, 1fr);
   gap: 2px;
   align-items: center;
 }
