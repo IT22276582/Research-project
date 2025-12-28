@@ -1,0 +1,43 @@
+# Session tracking configuration
+
+[session_tracking]
+# Database settings
+storage_path = "data/sessions.db"
+
+# Auto session management
+auto_start_sessions = true
+auto_end_sessions_after_inactivity = true
+inactivity_threshold_seconds = 300  # 5 minutes
+
+# Session defaults
+default_tags = []
+require_success_rating = false
+require_productivity_rating = false
+require_difficulty_rating = false
+require_satisfaction_rating = false
+
+# Milestone settings
+auto_log_milestones = true
+milestone_types = [
+    "break_start", "break_end", "task_complete", 
+    "interruption", "focus_change", "ema_prompt"
+]
+
+# Cognitive load tracking
+log_cognitive_load_updates = true
+cognitive_load_update_interval = 30  # seconds
+
+# Data retention
+enable_retention_pruning = true
+retention_days = 90
+
+[session_config]
+# Session metadata defaults
+project_name = null
+task_type = null
+work_context = null
+
+# Rating scales
+productivity_scale = ["Very Low", "Low", "Medium", "High", "Very High"]
+difficulty_scale = ["Very Easy", "Easy", "Medium", "Hard", "Very Hard"]
+satisfaction_scale = ["Very Dissatisfied", "Dissatisfied", "Neutral", "Satisfied", "Very Satisfied"]

@@ -107,6 +107,9 @@ class ServiceConfig(BaseModel):
     port: int = 8000
 
 
+from .session_config import SessionConfig, SessionTrackingConfig
+
+
 class ExportConfig(BaseModel):
     enabled: bool = True
     output_dir: Path = Path("data/exports")
@@ -147,6 +150,8 @@ class AppConfig(BaseModel):
     service: ServiceConfig = ServiceConfig()
     sensitivity: Optional[SensitivityConfig] = None
     export: ExportConfig = ExportConfig()
+    session_tracking: SessionTrackingConfig = SessionTrackingConfig()
+    session_config: SessionConfig = SessionConfig()
 
     @classmethod
     def load(cls, path: Optional[Path] = None) -> "AppConfig":
@@ -161,6 +166,7 @@ class AppConfig(BaseModel):
     def ensure_storage_parent(self) -> None:
         self.storage.path.parent.mkdir(parents=True, exist_ok=True)
         self.export.output_dir.mkdir(parents=True, exist_ok=True)
+        self.session_tracking.storage_path.parent.mkdir(parents=True, exist_ok=True)
 
     def apply_sensitivity(self) -> None:
         if self.sensitivity:

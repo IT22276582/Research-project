@@ -17,6 +17,11 @@ from pydantic import BaseModel, Field
 from .config import AppConfig
 from .events import Event, utc_now
 from .service import EstimatorService
+from .session_manager import SessionManager
+from .session_api import (
+    SessionAPI, SessionStartRequest, SessionEndRequest, 
+    SessionUpdateRequest, CognitiveLogRequest, MilestoneRequest
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -69,11 +74,23 @@ def create_service(config_path: Optional[Path] = None) -> EstimatorService:
     return EstimatorService(config)
 
 
+def create_session_manager(config_path: Optional[Path] = None) -> SessionManager:
+    config = AppConfig.load(config_path)
+    config.ensure_storage_parent()
+    logger.info("Creating session manager with storage path=%s", config.session_tracking.storage_path)
+    return SessionManager(config.session_tracking.storage_path)
+
+
 def create_app(config_path: Optional[Path] = None) -> FastAPI:
     logger.info("Creating estimator service")
     service = create_service(config_path)
+    session_manager = create_session_manager(config_path)
+    session_api = SessionAPI(session_manager)
+    
     app = FastAPI(title="Cognitive Load Estimator (Python)", version="0.1.0")
     app.state.service = service
+    app.state.session_manager = session_manager
+    app.state.session_api = session_api
 
     # Allow local Next.js dev server by default
     app.add_middleware(
@@ -88,14 +105,22 @@ def create_app(config_path: Optional[Path] = None) -> FastAPI:
     async def _startup() -> None:
         logger.info("Starting estimator service runtime loop")
         await service.start()
+        await session_manager.initialize()
 
     @app.on_event("shutdown")
     async def _shutdown() -> None:
         logger.info("Stopping estimator service runtime loop")
         await service.stop()
+        await session_manager.close()
 
     def get_service() -> EstimatorService:
         return app.state.service
+
+    def get_session_manager() -> SessionManager:
+        return app.state.session_manager
+
+    def get_session_api() -> SessionAPI:
+        return app.state.session_api
 
     @app.post("/events")
     async def ingest_event(evt: EventIn, svc: EstimatorService = Depends(get_service)) -> Dict[str, Any]:
@@ -255,5 +280,67 @@ def create_app(config_path: Optional[Path] = None) -> FastAPI:
         if not path.exists():
             raise HTTPException(status_code=404, detail="export file missing")
         return FileResponse(path, filename=path.name, media_type="application/json")
+
+    # Session tracking endpoints
+    @app.post("/sessions/start")
+    async def start_session(
+        request: SessionStartRequest, api: SessionAPI = Depends(get_session_api)
+    ) -> Dict[str, Any]:
+        return await api.start_session(request)
+
+    @app.post("/sessions/end")
+    async def end_session(
+        request: SessionEndRequest, api: SessionAPI = Depends(get_session_api)
+    ) -> Dict[str, Any]:
+        return await api.end_session(request)
+
+    @app.get("/sessions/current")
+    async def get_current_session(api: SessionAPI = Depends(get_session_api)) -> Dict[str, Any]:
+        return await api.get_current_session()
+
+    @app.get("/sessions/status")
+    async def get_session_status(api: SessionAPI = Depends(get_session_api)) -> Dict[str, Any]:
+        return await api.get_session_status()
+
+    @app.get("/sessions/{session_uuid}")
+    async def get_session_summary(
+        session_uuid: str, api: SessionAPI = Depends(get_session_api)
+    ) -> Dict[str, Any]:
+        return await api.get_session_summary(session_uuid)
+
+    @app.get("/sessions")
+    async def list_sessions(
+        limit: int = 50,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        api: SessionAPI = Depends(get_session_api)
+    ) -> Dict[str, Any]:
+        return await api.list_sessions(limit, start_date, end_date)
+
+    @app.put("/sessions/{session_uuid}")
+    async def update_session(
+        session_uuid: str,
+        request: SessionUpdateRequest,
+        api: SessionAPI = Depends(get_session_api)
+    ) -> Dict[str, Any]:
+        return await api.update_session(session_uuid, request)
+
+    @app.delete("/sessions/{session_uuid}")
+    async def delete_session(
+        session_uuid: str, api: SessionAPI = Depends(get_session_api)
+    ) -> Dict[str, Any]:
+        return await api.delete_session(session_uuid)
+
+    @app.post("/sessions/log-cognitive-load")
+    async def log_cognitive_load(
+        request: CognitiveLogRequest, api: SessionAPI = Depends(get_session_api)
+    ) -> Dict[str, Any]:
+        return await api.log_cognitive_load(request)
+
+    @app.post("/sessions/milestones")
+    async def add_milestone(
+        request: MilestoneRequest, api: SessionAPI = Depends(get_session_api)
+    ) -> Dict[str, Any]:
+        return await api.add_milestone(request)
 
     return app
