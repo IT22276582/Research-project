@@ -65,7 +65,7 @@ def predict_all_percentages():
         # If all scores are zero, distribute equally
         percentages = {inverse_mapping[a]: 100.0 / len(scores) for a in scores}
     
-    best_arm = max(scores, key=scores.get)
+    best_arm = max(scores.keys(), key=lambda arm: scores[arm])
     return inverse_mapping[best_arm], percentages
 
 
