@@ -1,0 +1,257 @@
+.heatmap-container {
+  margin-top: 2rem;
+  padding: 2rem;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.heatmap-title {
+  color: #1e293b;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.heatmap-grid-section {
+  margin-bottom: 2rem;
+}
+
+.heatmap-period-labels {
+  display: grid;
+  grid-template-columns: 60px repeat(6, 1fr) repeat(6, 1fr) repeat(6, 1fr) repeat(6, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.heatmap-period-label {
+  font-weight: 600;
+  text-align: center;
+}
+
+.heatmap-hour-labels {
+  display: grid;
+  grid-template-columns: 60px repeat(24, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+  font-size: 0.65rem;
+  color: #94a3b8;
+}
+
+.heatmap-hour-label {
+  text-align: center;
+}
+
+.heatmap-cells {
+  display: grid;
+  grid-template-columns: 60px repeat(24, 1fr);
+  gap: 2px;
+  align-items: center;
+}
+
+.heatmap-intensity-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.heatmap-cell {
+  height: 45px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.heatmap-cell:hover {
+  z-index: 10;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.heatmap-cell-content {
+  text-align: center;
+}
+
+.heatmap-cell-hour {
+  font-size: 0.6rem;
+  opacity: 0.8;
+  line-height: 1;
+}
+
+.heatmap-cell-percentage {
+  font-size: 0.8rem;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.heatmap-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+.heatmap-summary-card {
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid;
+}
+
+.heatmap-summary-morning {
+  background: #fef3c7;
+  border-color: #f59e0b;
+}
+
+.heatmap-summary-afternoon {
+  background: #fef9c3;
+  border-color: #eab308;
+}
+
+.heatmap-summary-evening {
+  background: #bbf7d0;
+  border-color: #22c55e;
+}
+
+.heatmap-summary-label {
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.heatmap-summary-morning .heatmap-summary-label {
+  color: #92400e;
+}
+
+.heatmap-summary-afternoon .heatmap-summary-label {
+  color: #854d0e;
+}
+
+.heatmap-summary-evening .heatmap-summary-label {
+  color: #166534;
+}
+
+.heatmap-summary-value {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.heatmap-summary-morning .heatmap-summary-value {
+  color: #78350f;
+}
+
+.heatmap-summary-afternoon .heatmap-summary-value {
+  color: #713f12;
+}
+
+.heatmap-summary-evening .heatmap-summary-value {
+  color: #14532d;
+}
+
+.heatmap-legend {
+  margin-top: 1.5rem;
+}
+
+.heatmap-legend-title {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.heatmap-legend-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.heatmap-legend-label {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.heatmap-legend-bar {
+  display: flex;
+  height: 28px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  width: 360px;
+}
+
+.heatmap-legend-segment {
+  width: 60px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.heatmap-legend-segment-dark-text {
+  color: #1f2937;
+}
+
+.heatmap-legend-segment-light-text {
+  color: white;
+}
+
+.heatmap-legend-scale {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-top: 0.25rem;
+}
+
+.heatmap-legend-scale-label {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+/* Color intensity classes */
+.heatmap-intensity-very-low {
+  background: #dc2626;
+}
+
+.heatmap-intensity-low {
+  background: #f87171;
+}
+
+.heatmap-intensity-medium-low {
+  background: #fbbf24;
+}
+
+.heatmap-intensity-medium {
+  background: #facc15;
+}
+
+.heatmap-intensity-medium-high {
+  background: #84cc16;
+}
+
+.heatmap-intensity-high {
+  background: #16a34a;
+}
+
+.heatmap-text-dark {
+  color: #111827;
+}
+
+.heatmap-text-medium {
+  color: #1f2937;
+}
+
+.heatmap-text-light {
+  color: white;
+}

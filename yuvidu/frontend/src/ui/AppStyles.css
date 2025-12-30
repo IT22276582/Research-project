@@ -1,0 +1,183 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+}
+.prediction-form{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 100px;
+    justify-content: space-between;
+}
+
+.app-title {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.loading-message {
+  color: #64748b;
+  font-style: italic;
+}
+
+.error-message {
+  color: #dc2626;
+  font-weight: 500;
+  background: #fee2e2;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #fca5a5;
+  margin-bottom: 1rem;
+}
+
+.prediction-results {
+  margin-top: 20px;
+}
+
+.best-time-section {
+  margin-bottom: 2rem;
+}
+
+.best-time-title {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.best-time-value {
+  color: #16a34a;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.probabilities-section {
+  margin-top: 20px;
+}
+
+.probabilities-title {
+  color: #2c3e50;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.probabilities-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.probability-item {
+  margin: 10px 0;
+  padding: 0.5rem 0;
+}
+
+.probability-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.probability-label {
+  width: 100px;
+  text-transform: capitalize;
+  font-weight: 500;
+  color: #374151;
+}
+
+.probability-bar-container {
+  width: 300px;
+  height: 30px;
+  background-color: #e5e7eb;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.probability-bar {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: width 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.probability-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+}
+
+.probability-bar-best {
+  background-color: #16a34a;
+  background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+}
+
+.probability-bar-normal {
+  background-color: #2563eb;
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+}
+
+.probability-value {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  position: relative;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 20px;
+    font-size: 18px;
+  }
+  
+  .probability-bar-container {
+    width: 200px;
+  }
+  
+  .probability-label {
+    width: 80px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    padding: 15px;
+    font-size: 16px;
+  }
+  
+  .app-title {
+    font-size: 1.5rem;
+  }
+  
+  .probability-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .probability-bar-container {
+    width: 100%;
+    max-width: 250px;
+  }
+  
+  .probability-label {
+    width: auto;
+  }
+}

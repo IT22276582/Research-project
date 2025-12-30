@@ -1,0 +1,15 @@
+{
+    "appId": "com.yuvidu.yuvidu",
+    "files":["dist-electron","dist-react"],
+    "icon":"./desktopicon.png",
+    "mac":{
+        "target":"dmg"
+    },
+    "linux":{
+        "target":"AppImage",
+        "category":"utility"
+    },
+    "win":{
+        "target":["portable","msi"]
+    }
+}
